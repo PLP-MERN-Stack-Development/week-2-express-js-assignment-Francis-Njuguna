@@ -1,63 +1,82 @@
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=19951371&assignment_repo_type=AssignmentRepo)
-# Express.js RESTful API Assignment
+# Express.js Product API
 
-This assignment focuses on building a RESTful API using Express.js, implementing proper routing, middleware, and error handling.
+## Setup Instructions
 
-## Assignment Overview
-
-You will:
-1. Set up an Express.js server
-2. Create RESTful API routes for a product resource
-3. Implement custom middleware for logging, authentication, and validation
-4. Add comprehensive error handling
-5. Develop advanced features like filtering, pagination, and search
-
-## Getting Started
-
-1. Accept the GitHub Classroom assignment invitation
-2. Clone your personal repository that was created by GitHub Classroom
-3. Install dependencies:
+1. **Install dependencies:**
+   ```bash
+   npm install express body-parser uuid dotenv
    ```
-   npm install
+2. **Set up environment variables:**
+   - Copy `.env.example` to `.env` and set your API key:
+     ```
+     API_KEY=your_api_key_here
+     ```
+3. **Run the server:**
+   ```bash
+   node server.js
    ```
-4. Run the server:
-   ```
-   npm start
-   ```
-
-## Files Included
-
-- `Week2-Assignment.md`: Detailed assignment instructions
-- `server.js`: Starter Express.js server file
-- `.env.example`: Example environment variables file
-
-## Requirements
-
-- Node.js (v18 or higher)
-- npm or yarn
-- Postman, Insomnia, or curl for API testing
+   The server will run on [http://localhost:3000](http://localhost:3000)
 
 ## API Endpoints
 
-The API will have the following endpoints:
+All endpoints require an `x-api-key` header with your API key.
 
-- `GET /api/products`: Get all products
-- `GET /api/products/:id`: Get a specific product
-- `POST /api/products`: Create a new product
-- `PUT /api/products/:id`: Update a product
-- `DELETE /api/products/:id`: Delete a product
+### Root
+- `GET /`
+  - Returns: Welcome message
 
-## Submission
+### Products
+- `GET /api/products`
+  - List all products
+  - Query params: `category`, `page`, `limit`
+  - Example: `/api/products?category=electronics&page=1&limit=2`
+- `GET /api/products/:id`
+  - Get product by ID
+- `POST /api/products`
+  - Create a new product
+  - Body: `{ name, description, price, category, inStock }`
+- `PUT /api/products/:id`
+  - Update a product
+  - Body: `{ name, description, price, category, inStock }`
+- `DELETE /api/products/:id`
+  - Delete a product
+- `GET /api/products/search?name=...`
+  - Search products by name
+- `GET /api/products/stats`
+  - Get product count by category
 
-Your work will be automatically submitted when you push to your GitHub Classroom repository. Make sure to:
+## Example Requests
 
-1. Complete all the required API endpoints
-2. Implement the middleware and error handling
-3. Document your API in the README.md
-4. Include examples of requests and responses
+**Create Product:**
+```
+curl -X POST http://localhost:3000/api/products \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: your_api_key_here" \
+  -d '{"name":"Tablet","description":"10-inch tablet","price":300,"category":"electronics","inStock":true}'
+```
 
-## Resources
+**Get Products (paginated):**
+```
+curl -H "x-api-key: your_api_key_here" http://localhost:3000/api/products?page=1&limit=2
+```
 
-- [Express.js Documentation](https://expressjs.com/)
-- [RESTful API Design Best Practices](https://restfulapi.net/)
-- [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) 
+**Search by Name:**
+```
+curl -H "x-api-key: your_api_key_here" http://localhost:3000/api/products/search?name=laptop
+```
+
+**Get Stats:**
+```
+curl -H "x-api-key: your_api_key_here" http://localhost:3000/api/products/stats
+```
+
+## Error Responses
+- 400: Validation error
+- 401: Unauthorized (missing/invalid API key)
+- 404: Not found
+- 500: Internal server error
+
+---
+
+**Author:** Francis Njuguna 
